@@ -1,12 +1,47 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CartDrawer from "@/components/CartDrawer";
+import HeroBanner from "@/components/home/HeroBanner";
+import CategoryGrid from "@/components/home/CategoryGrid";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
+import FlashDeals from "@/components/home/FlashDeals";
+import BrandShowcase from "@/components/home/BrandShowcase";
+import Newsletter from "@/components/home/Newsletter";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const Index = () => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { items, updateQuantity, removeFromCart, getCartCount } = useCart();
+  const { getWishlistCount } = useWishlist();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header
+        cartItemCount={getCartCount()}
+        wishlistCount={getWishlistCount()}
+        onCartClick={() => setIsCartOpen(true)}
+      />
+
+      <main>
+        <HeroBanner />
+        <CategoryGrid />
+        <FeaturedProducts />
+        <FlashDeals />
+        <BrandShowcase />
+        <Newsletter />
+      </main>
+
+      <Footer />
+
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={items}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeFromCart}
+      />
     </div>
   );
 };
