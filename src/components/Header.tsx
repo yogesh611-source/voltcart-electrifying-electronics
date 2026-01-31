@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface HeaderProps {
   cartItemCount?: number;
@@ -42,10 +43,6 @@ const Header = ({ cartItemCount = 0, wishlistCount = 0, onCartClick }: HeaderPro
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground py-2 text-center text-sm">
-        <p>🔥 Free shipping on orders over ₹999 | Use code VOLT10 for 10% off</p>
-      </div>
 
       {/* Main Header */}
       <div className="container-custom">
@@ -57,42 +54,44 @@ const Header = ({ cartItemCount = 0, wishlistCount = 0, onCartClick }: HeaderPro
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80">
-              <div className="flex flex-col gap-6 mt-6">
-                <Logo />
-                <nav className="flex flex-col gap-2">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "px-4 py-2 rounded-lg transition-colors",
-                        location.pathname === link.path
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-muted"
-                      )}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </nav>
-                <div className="border-t pt-4">
-                  <p className="text-sm font-medium text-muted-foreground mb-3">Categories</p>
-                  <div className="flex flex-col gap-1">
-                    {categories.map((category) => (
+            <SheetContent side="left" className="w-80 p-0">
+              <ScrollArea className="h-full p-6">
+                <div className="flex flex-col gap-6 mt-6">
+                  <Logo />
+                  <nav className="flex flex-col gap-2">
+                    {navLinks.map((link) => (
                       <Link
-                        key={category.slug}
-                        to={`/category/${category.slug}`}
+                        key={link.path}
+                        to={link.path}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                        className={cn(
+                          "px-4 py-2 rounded-lg transition-colors",
+                          location.pathname === link.path
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                        )}
                       >
-                        {category.name}
+                        {link.name}
                       </Link>
                     ))}
+                  </nav>
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-medium text-muted-foreground mb-3">Categories</p>
+                    <div className="flex flex-col gap-1">
+                      {categories.map((category) => (
+                        <Link
+                          key={category.slug}
+                          to={`/category/${category.slug}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollArea>
             </SheetContent>
           </Sheet>
 
