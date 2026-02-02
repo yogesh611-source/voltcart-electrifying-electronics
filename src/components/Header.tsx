@@ -7,7 +7,8 @@ import {
   User, 
   Menu, 
   ChevronDown,
-  LogOut
+  LogOut,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import { useToast } from "@/hooks/use-toast";
 
 interface HeaderProps {
@@ -38,6 +40,7 @@ const Header = ({ cartItemCount = 0, wishlistCount = 0, onCartClick }: HeaderPro
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
@@ -204,6 +207,14 @@ const Header = ({ cartItemCount = 0, wishlistCount = 0, onCartClick }: HeaderPro
                       {user.email}
                     </div>
                     <DropdownMenuSeparator />
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="gap-2">
+                          <Shield className="h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem asChild>
                       <Link to="/account">My Account</Link>
                     </DropdownMenuItem>
