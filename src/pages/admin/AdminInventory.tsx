@@ -35,7 +35,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import AdminLayout from "@/components/admin/AdminLayout";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -63,6 +65,7 @@ const AdminInventory = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [formImages, setFormImages] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -101,6 +104,7 @@ const AdminInventory = () => {
   const openEditDialog = (product?: Product) => {
     if (product) {
       setSelectedProduct(product);
+      setFormImages(product.images || []);
       setFormData({
         name: product.name,
         description: product.description || "",
@@ -111,6 +115,7 @@ const AdminInventory = () => {
       });
     } else {
       setSelectedProduct(null);
+      setFormImages([]);
       setFormData({
         name: "",
         description: "",
@@ -134,6 +139,7 @@ const AdminInventory = () => {
         stock: parseInt(formData.stock),
         category: formData.category,
         brand: formData.brand,
+        images: formImages,
       };
 
       if (selectedProduct) {
@@ -358,7 +364,7 @@ const AdminInventory = () => {
 
         {/* Edit/Create Dialog */}
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-2xl max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>
                 {selectedProduct ? "Edit Product" : "Add Product"}
@@ -370,7 +376,17 @@ const AdminInventory = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-4">
+            <ScrollArea className="max-h-[60vh] pr-4">
+              <div className="space-y-4">
+                {/* Image Upload Section */}
+                <div className="space-y-2">
+                  <Label>Product Images</Label>
+                  <ImageUpload
+                    images={formImages}
+                    onImagesChange={setFormImages}
+                    maxImages={5}
+                  />
+                </div>
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -439,8 +455,9 @@ const AdminInventory = () => {
                     }
                   />
                 </div>
+                </div>
               </div>
-            </div>
+            </ScrollArea>
 
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
